@@ -4,3 +4,5 @@ venv/
 env/
 
 backend/model/venv
+
+data/
