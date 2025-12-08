@@ -7,7 +7,7 @@ from tensorflow.keras.models import Model
 # basic parameters for image processing
 IMAGE_SIZE = (224, 224)
 BATCH_SIZE = 32
-DATASET_PATH = "../../dataset/"
+DATASET_PATH = "../../data/"
 
 datagen = ImageDataGenerator(
     rescale=1./255,
@@ -61,7 +61,7 @@ model.compile(
 history = model.fit(
     train_gen,
     validation_data=val_gen,
-    epochs=10
+    epochs=15
 )
 
 # evaluate performance
@@ -69,5 +69,5 @@ loss, accuracy = model.evaluate(val_gen)
 print(f"Validation Accuracy: {accuracy * 100:.2f}%")
 
 # save model
-model.save("food_nonfood_model.h5")
-print("Model saved as food_nonfood_model.h5")
+model.save("food_classifier_model_v3.h5")
+print("Model saved as food_nonfood_model.h5 + version number")
