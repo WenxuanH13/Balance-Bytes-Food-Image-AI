@@ -3,7 +3,7 @@ import "./App.css";
 
 const API_BASE =
   process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "http://localhost:8000/api";
-const PREDICT_URL = `${API_BASE}/predict`;
+const PREDICT_URL = `${API_BASE}/predict/`;
 const IMAGE_FIELD = "image"; // change if backend expects a different field
 
 export default function App() {
@@ -39,16 +39,12 @@ export default function App() {
   const onDrop      = (e) => { e.preventDefault(); setDragOver(false); onFileSelected(e.dataTransfer.files?.[0] || null); };
 
   const confidencePct = useMemo(() => {
-    if (!result) return null;
-    const c = result.confidence ?? result.raw?.probability ?? result.raw?.score;
-    return typeof c === "number" ? Math.round(c * 100) : null;
+    if (!result || typeof result.confidence !== "number") return null;
+    return Math.round(result.confidence * 100);
   }, [result]);
 
-  const isFood = useMemo(() => {
-    if (!result?.label) return null;
-    const l = String(result.label).toLowerCase();
-    return l.includes("food");
-  }, [result]);
+  
+  const isFood = result?.isFood;
 
   const reset = () => { setFile(null); setPreview(""); setResult(null); setError(null); };
 
@@ -66,15 +62,10 @@ export default function App() {
       }
       const data = await res.json();
       setResult({
-        label: data.label ?? data.prediction ?? data.class ?? undefined,
-        confidence:
-          typeof data.confidence === "number"
-            ? data.confidence
-            : typeof data.probability === "number"
-            ? data.probability
-            : typeof data.score === "number"
-            ? data.score
-            : undefined,
+        label: data.label,          
+        isFood: data.is_food,
+        foodGuess: data.guess,         
+        confidence: data.confidence,  
         raw: data,
       });
     } catch (err) {
@@ -136,15 +127,27 @@ export default function App() {
 
           {result && (
             <div className="meta">
-              {isFood !== null && (
-                <span className={`badge ${isFood ? "food" : "not"}`}>
-                  {result.label || (isFood ? "Food" : "Non-Food")}
-                </span>
+              {typeof isFood === "boolean" && (
+                <>
+                  <span className={`badge ${isFood ? "food" : "not"}`}>
+                    {isFood ? "Food" : "Non-Food"}
+                  </span>
+
+                  {isFood && result.foodGuess && (
+                    <div style={{ marginTop: "0.5rem" }}>
+                      Guess: <strong>{result.foodGuess}</strong>
+                    </div>
+                  )}
+                </>
               )}
+
               {confidencePct !== null && (
-                <span>Confidence: <strong>{confidencePct}%</strong></span>
+                <div style={{ marginTop: "0.5rem" }}>
+                  Confidence: <strong>{confidencePct}%</strong>
+                </div>
               )}
-              <details className="raw">
+
+              <details className="raw" style={{ marginTop: "0.5rem" }}>
                 <summary>Raw response</summary>
                 <pre>{JSON.stringify(result.raw ?? {}, null, 2)}</pre>
               </details>

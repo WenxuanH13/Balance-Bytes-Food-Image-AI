@@ -6,3 +6,8 @@ env/
 backend/model/venv
 
 data/
+
+backend/db.sqlite3
+backend/classifier/__pycache__
+backend/classifier/migrations
+backend/food_image_ai/__pycache__
