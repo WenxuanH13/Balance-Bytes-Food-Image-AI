@@ -69,5 +69,5 @@ loss, accuracy = model.evaluate(val_gen)
 print(f"Validation Accuracy: {accuracy * 100:.2f}%")
 
 # save model
-model.save("food_classifier_model_v5.keras")
-print("Model saved as food_nonfood_model.keras + version number")
+model.save("food_detector_model_v5.keras")
+print("Model saved as food_detector.keras + version number")

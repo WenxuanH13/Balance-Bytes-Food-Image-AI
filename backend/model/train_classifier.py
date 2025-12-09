@@ -66,7 +66,7 @@ model.compile(
 history = model.fit(
     train_gen,
     validation_data=val_gen,
-    epochs=10
+    epochs=15
 )
 
 loss, accuracy = model.evaluate(val_gen)
