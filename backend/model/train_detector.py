@@ -19,6 +19,7 @@ datagen = ImageDataGenerator(
 
 train_gen = datagen.flow_from_directory(
     DATASET_PATH,
+    classes=['non_food', 'food'],
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
     class_mode="binary",
@@ -27,6 +28,7 @@ train_gen = datagen.flow_from_directory(
 
 val_gen = datagen.flow_from_directory(
     DATASET_PATH,
+    classes=['non_food', 'food'],
     target_size=IMAGE_SIZE,
     batch_size=BATCH_SIZE,
     class_mode="binary",
@@ -69,5 +71,5 @@ loss, accuracy = model.evaluate(val_gen)
 print(f"Validation Accuracy: {accuracy * 100:.2f}%")
 
 # save model
-model.save("food_detector_model_v5.keras")
+model.save("food_detector_model_v6.keras")
 print("Model saved as food_detector.keras + version number")
