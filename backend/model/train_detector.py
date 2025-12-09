@@ -7,11 +7,11 @@ from tensorflow.keras.models import Model
 # basic parameters for image processing
 IMAGE_SIZE = (224, 224)
 BATCH_SIZE = 32
-DATASET_PATH = "../../data/"
+DATASET_PATH = "../../data/detector"
 
 datagen = ImageDataGenerator(
     rescale=1./255,
-    validation_split=0.2,      # 80% train, 20% validation
+    validation_split=0.2,
     rotation_range=20,
     zoom_range=0.2,
     horizontal_flip=True
@@ -36,8 +36,8 @@ val_gen = datagen.flow_from_directory(
 # loading MobileNetV2
 base_model = MobileNetV2(
     input_shape=(224, 224, 3),
-    include_top=False,     # remove ImageNet classifier
-    weights="imagenet"     # use pretrained weights
+    include_top=False,
+    weights="imagenet"
 )
 
 base_model.trainable = False
@@ -69,5 +69,5 @@ loss, accuracy = model.evaluate(val_gen)
 print(f"Validation Accuracy: {accuracy * 100:.2f}%")
 
 # save model
-model.save("food_classifier_model_v3.h5")
-print("Model saved as food_nonfood_model.h5 + version number")
+model.save("food_classifier_model_v5.keras")
+print("Model saved as food_nonfood_model.keras + version number")
