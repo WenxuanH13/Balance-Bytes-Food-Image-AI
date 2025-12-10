@@ -4,7 +4,7 @@ import "./App.css";
 const API_BASE =
   process.env.REACT_APP_API_BASE?.replace(/\/$/, "") || "http://localhost:8000/api";
 const PREDICT_URL = `${API_BASE}/predict/`;
-const IMAGE_FIELD = "image"; // change if backend expects a different field
+const IMAGE_FIELD = "image"; 
 
 export default function App() {
   const [file, setFile] = useState(null);
@@ -16,6 +16,7 @@ export default function App() {
 
   const pickFile = () => inputRef.current?.click();
 
+  //Ensure image file
   const onFileSelected = useCallback((f) => {
     if (!f) return;
     if (!f.type.startsWith("image/")) {
@@ -38,12 +39,13 @@ export default function App() {
   const onDragLeave = (e) => { e.preventDefault(); setDragOver(false); };
   const onDrop      = (e) => { e.preventDefault(); setDragOver(false); onFileSelected(e.dataTransfer.files?.[0] || null); };
 
+  //Confidence calculations
   const confidencePct = useMemo(() => {
     if (!result || typeof result.confidence !== "number") return null;
     return Math.round(result.confidence * 100);
   }, [result]);
 
-  
+  //If results is food move onto the phase two part
   const isFood = result?.isFood;
 
   const reset = () => { setFile(null); setPreview(""); setResult(null); setError(null); };
